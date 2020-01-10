@@ -56,7 +56,7 @@ def importcsv():
     print("Reading data from CSV")
 
     ## event data (can be added as a user input)
-    data = pd.read_csv (r'D:\Documents\\Python\\Repository\\Excel Test Data\\eventdata.csv')
+    data = pd.read_csv (r'D:\Documents\\Python\\Excel Test Data\\eventdata.csv')
     while True:
         print("(R)eplace or (A)ppend?")
         selection = input(">").upper()
