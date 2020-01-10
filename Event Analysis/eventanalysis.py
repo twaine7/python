@@ -4,7 +4,7 @@ import sqlite3
 
 
 
-conn = sqlite3.connect('event.db')
+conn = sqlite3.connect('D:\\Documents\\Python\\Repository\\Databases\\event.db')
 c = conn.cursor()
 
 action = ""
@@ -56,7 +56,7 @@ def importcsv():
     print("Reading data from CSV")
 
     ## event data (can be added as a user input)
-    data = pd.read_csv (r'D:\Documents\Python\Python Scripts\eventdata.csv')
+    data = pd.read_csv (r'D:\Documents\\Python\\Repository\\Excel Test Data\\eventdata.csv')
     while True:
         print("(R)eplace or (A)ppend?")
         selection = input(">").upper()
@@ -83,17 +83,16 @@ def printtable():
 
 
 # runs analysis
-class Correlation:
+#class Correlation:5
 
     # creates "correlation parent" object for each serverserial (each event becomes an object)
-    def __init__(self)
-        self.parent = event
-        self.children = list()
+  #  def __init__(self)
+  #      self.parent = event5
+      
 
-
-    def eventanalyzer():
-        print("Event Analyzer - Under Development")
-        print(pd.read_sql('SELECT EVENTCODE, NODE, count(SERVERSERIAL) as "EVT" from events where LASTOCCURRENCE < 1520337629 + 1800 GROUP BY EVENTCODE, NODE ', conn))
+def eventanalyzer():
+    print("Event Analyzer - Under Development")
+    print(pd.read_sql('SELECT EVENTCODE, NODE, count(SERVERSERIAL) as "EVT" from events where LASTOCCURRENCE < 1520337629 + 1800 GROUP BY EVENTCODE, NODE ', conn))
 
 
 print("Welcome to Event Analyzer v0.1")
