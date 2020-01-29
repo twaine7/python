@@ -27,8 +27,13 @@ while True:
     host_ip = socket.gethostbyname(host_name)
 
     # Create unique identifer (table index)
-    new_uid = "id" + str(format(uid, '04d'))
     
+    new_uid = "id" + str(format(uid, '04d'))
+    prev_uid = "id" + str(format(uid-1,'04d'))
+
+    # Increments UID value each iteration
+    uid += 1
+
     # Assign timestamp to event entry
     time_stamp = str(datetime.datetime.now().time())
 
@@ -40,13 +45,16 @@ while True:
     used_mem = vir_mem.used
     used_mem_per = int(vir_mem.percent)
 
-    # Increments UID value each iteration
-    uid += 1
+
+
+    # Creates new event instance
+    new_event = putitem.Createevent(prev_uid, new_uid, time_stamp, host_name, host_ip, value_type, used_mem, used_mem_per)
 
     # Calls 'newevent' class to enter event into DB
-    putitem.newevent(new_uid, time_stamp, host_name, host_ip, value_type, used_mem, used_mem_per)
+    putitem.Createevent.createrecord(new_event, prev_uid)
 
     # Debug / confirmation that the UIDs are incrementing, and the entries are current
-    print(new_uid, time_stamp, host_name, host_ip, value_type, used_mem, used_mem_per)
+    # print(new_uid, time_stamp, host_name, host_ip, value_type, used_mem, used_mem_per)
     
+    # Increments each iteration by 1 second
     time.sleep(1)
