@@ -1,3 +1,5 @@
+# pylint: disable=no-member
+
 import boto3
 import psutil
 import datetime
