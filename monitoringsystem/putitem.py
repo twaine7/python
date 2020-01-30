@@ -40,7 +40,7 @@ class Createevent:
                     'lastrecord': self.last_record
                 }
         )
-         
+        
         # Find previous "lastrecord" and changes flag from 1 to 0
         if prev_uid != "id0000":
             table.update_item(
