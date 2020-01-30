@@ -2,9 +2,7 @@
 
 import boto3
 
-
 class Createevent:
-
 
     def __init__(self, prev_uid, new_uid, time_stamp, host_name, host_ip, value_type, used_mem, used_mem_per):
         self.prev_uid = prev_uid

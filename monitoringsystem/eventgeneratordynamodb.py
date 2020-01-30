@@ -45,8 +45,6 @@ while True:
     used_mem = vir_mem.used
     used_mem_per = int(vir_mem.percent)
 
-
-
     # Creates new event instance
     new_event = putitem.Createevent(prev_uid, new_uid, time_stamp, host_name, host_ip, value_type, used_mem, used_mem_per)
 
