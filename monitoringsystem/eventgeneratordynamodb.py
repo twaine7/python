@@ -26,6 +26,7 @@ while True:
     host_name = socket.gethostname()
     host_ip = socket.gethostbyname(host_name)
 
+
     # Create unique identifer (table index)
     
     new_uid = "id" + str(format(uid, '04d'))
