@@ -17,6 +17,7 @@ table = dynamodb.Table('monitor')
 # Start UID count number (will increment in following 'while' statement)
 uid = 1
 
+#####
 # While statement to continuously generate events, iterates each second
 while True:
 
