@@ -10,7 +10,7 @@ import socket
 import psutil
 import os
 import subprocess
-import rds_config # <--- file with RDS connection info (username, password, hostname, dbname)
+import rds_config # <--- need to create file "rds_config.py" with RDS connection info (username, password, hostname, dbname)
 import mysql.connector as mariadb
 
 # class to create event objects
