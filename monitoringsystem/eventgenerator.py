@@ -2,37 +2,49 @@
 
 ## Event Generator - main
 
-
 # Import python modules
 import boto3
 import time
 import datetime
 import socket
 import psutil
-import pickle
 import os
 import subprocess
+import rds_config # <--- file with RDS connection info (username, password, hostname, dbname)
+import mysql.connector as mariadb
 
 # class to create event objects
 import createnewevent
 import createnewci
 
+#RDS Connection Info
+rds_host = rds_config.db_host
+name = rds_config.db_user
+password = rds_config.db_pass
+db_name = rds_config.db_name
 
-# Get the service resource.  Later, this can be brought into a seperate functionality depending on the database table being referenced
-# 'dynamodb' is the aws service being used
-dynamodb = boto3.resource('dynamodb')
+# Sets MariaDB connection variables
+conn = mariadb.connect(host=rds_host, user=name, passwd=password, db=db_name, connect_timeout=5)
+cur = conn.cursor(buffered=True)
 
-# 'monitor' is the database table being referenced
-table = dynamodb.Table('monitoring')
+def generateuid():
+    # Finds last UID in Events DB Table
+    find_query = """select uid from events order by uid desc limit 1"""
+    cur.execute(find_query)
+    query = cur.fetchall()
+    conn.commit()
+    lastuid = query[0][0]
 
-# Define Variables
-i = 1
+    print("Last UID:", lastuid)
 
-def generateuid(i):
-    # Generates new event UID
-    return "id" + str(format(i, '04d'))
+    # Gets integer from UID, increments by 1, returns new UID
+    intfromlastuid = int("".join(s for s in lastuid if s.isdigit()))
+    nexti = intfromlastuid + 1  
+
+    nextuid ="id" + str(format(nexti, '04d'))
+    print("Next UID:", nextuid)
+    return nextuid
     
-
 def findhostinfo():
     # Finds IP and Hostname of localhost
     host_name = socket.gethostname()
@@ -47,41 +59,10 @@ def gethostresourceinfo():
     vir_mem = psutil.virtual_memory()
     return vir_mem, vir_mem.used, int(vir_mem.percent), int(psutil.cpu_percent())
 
-def load():  
-    # Load variables from last script run (current_uid, uid, prev_uid)
-    print("Loading i")
-    i = pickle.load(open('store.pckle', 'rb'))
-    return i
-
-def save(i):  
-    # Store variables for use in subsequent script runs (uid, i, prev_uid)
-    print("Saving i", i)
-    f = open('store.pckle', 'wb')
-    pickle.dump(i,f)
-    f.close()
-
-def load_save():
-    choice = ""
-    while choice != 'N' and choice != 'L':
-        
-        choice = input("Load or New? l/n").upper()
-        if choice == 'N':
-            print("Starting new count")
-            i = 1
-            print("i = ", i)
-            return i
-        if choice == 'L':
-            print("Loading from store.pckle")
-            i = load()
-            print("Starting count at", i)
-            return i
-i = load_save()
-
 while True:
     # Iterates iterator for UID ('id000' + i) & creates new uid
-    uid = generateuid(i)
-    i += 1
-
+    uid = generateuid()
+    
     # Ping application
     #application = "twitch.tv"
 #   type_, min_, avg_, max_, mdev_, total_, loss_ = ping(application)
@@ -103,13 +84,9 @@ while True:
 
     # Creates new event instancen
     new_event = createnewevent.Newevent(uid, time_stamp, host_name, host_ip, used_cpu_per, used_mem, used_mem_per)
-
+    
     # Calls 'newevent' class to enter event into DB
     createnewevent.Newevent.createrecord(new_event)
-    
-    # Saves current UID, iterator, and previous UID to store.pckle
-    save(i)
-    # Debug / confirmation that the UIDs are incrementing, and the entries are current
-    
+  
     # Increments each iteration by 1 second
     time.sleep(1)

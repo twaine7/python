@@ -39,7 +39,7 @@ class Newhost(object):
         # Checks to see if CI exists in database
         for record in query:
             if self.host_name == query[i][0]:
-                print(record, "exists in db")
+                # print(record, "exists in db")
                 found = 1
             i += 1
 
